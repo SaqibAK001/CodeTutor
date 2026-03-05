@@ -111,6 +111,7 @@
             gap: 15px;
             margin-bottom: 20px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .toggle-container {
@@ -200,19 +201,19 @@
         </header>
 
         <div class="features">
-            <div class="feature-card" onclick="setMode('Explain This Code')">
+            <div class="feature-card" onclick="setMode('code')">
                 <h3>💻 Explain This Code</h3>
                 <p>Get line-by-line breakdown in simple English</p>
             </div>
-            <div class="feature-card" onclick="setMode('Fix My Error')">
+            <div class="feature-card" onclick="setMode('error')">
                 <h3>🐛 Fix My Error</h3>
                 <p>Instant root cause analysis + solution</p>
             </div>
-            <div class="feature-card" onclick="setMode('Summarize Docs')">
+            <div class="feature-card" onclick="setMode('docs')">
                 <h3>📚 Summarize Docs</h3>
                 <p>Technical docs → Concise TL;DR</p>
             </div>
-            <div class="feature-card" onclick="setMode('Get Productivity Tips')">
+            <div class="feature-card" onclick="setMode('tips')">
                 <h3>⚡ Get Productivity Tips</h3>
                 <p>Personalized workflow coaching</p>
             </div>
@@ -229,11 +230,11 @@
                     <input type="checkbox" id="beginnerMode" checked>
                     <label for="beginnerMode">🎓 Beginner Mode (Simplified explanations)</label>
                 </div>
-                <button onclick="askCodeTutor()" id="submitBtn">Ask CodeTutor</button>
+                <button id="submitBtn" onclick="askCodeTutor()">Ask CodeTutor</button>
             </div>
 
             <div class="output-section" id="outputSection">
-                <span class="badge" id="categoryBadge">Category</span>
+                <span class="badge" id="categoryBadge" style="display: none;">Category</span>
                 <div class="loading" id="loading" style="display: none;">🤔 CodeTutor is thinking...</div>
                 <div class="response" id="response"></div>
             </div>
@@ -246,78 +247,83 @@
     </div>
 
     <script>
-        // ⚠️ REPLACE THIS WITH YOUR API GATEWAY URL
+        // ⚠️ YOUR API GATEWAY URL
         const API_URL = 'https://c80uujw55j.execute-api.us-east-1.amazonaws.com/dev/analyze';
 
         function setMode(mode) {
             const textarea = document.getElementById('userInput');
             const placeholders = {
-                'Explain This Code': 'Paste your code here...\nExample:\ndef hello():\n    print("Hello World")',
-                'Fix My Error': 'Paste your error message here...\nExample:\nNullPointerException: Cannot invoke method on null object',
-                'Summarize Docs': 'Paste documentation here...\nExample:\nThe fetch() method returns a Promise that resolves to a Response object...',
-                'Get Productivity Tips': 'Ask your question...\nExample: How do I improve my coding speed?'
+                'code': 'Paste your code here...\nExample:\ndef hello():\n    print("Hello World")',
+                'error': 'Paste your error message here...\nExample:\nNullPointerException: Cannot invoke method on null object',
+                'docs': 'Paste documentation here...\nExample:\nThe fetch() method returns a Promise that resolves to a Response object...',
+                'tips': 'Ask your question...\nExample: How do I improve my coding speed?'
             };
-            textarea.placeholder = placeholders[mode];
+            textarea.placeholder = placeholders[mode] || '';
             textarea.focus();
         }
- 
+
         async function askCodeTutor() {
             const input = document.getElementById('userInput').value;
             const beginnerMode = document.getElementById('beginnerMode').checked;
             const outputSection = document.getElementById('outputSection');
             const loading = document.getElementById('loading');
-            const response = document.getElementById('response');
+            const responseDiv = document.getElementById('response');
             const categoryBadge = document.getElementById('categoryBadge');
             const submitBtn = document.getElementById('submitBtn');
 
-            if (!input.trim()) {
+            if (!input || input.trim() === '') {
                 alert('Please enter some code, error, or question first!');
                 return;
             }
 
-            // Show loading
             outputSection.classList.add('active');
             loading.style.display = 'block';
-            response.textContent = '';
+            responseDiv.textContent = '';
+            categoryBadge.style.display = 'none';
             submitBtn.disabled = true;
+            submitBtn.textContent = 'Thinking...';
 
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
+                    headers: { 
+                        'Content-Type': 'application/json' 
                     },
-                    body: JSON.stringify({
-                        input: input,
-                        beginnerMode: beginnerMode
+                    body: JSON.stringify({ 
+                        input: input, 
+                        beginnerMode: beginnerMode 
                     })
                 });
 
-                const data = await res.json();
-                
-                // Hide loading
                 loading.style.display = 'none';
-                
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Ask CodeTutor';
+
+                const data = await res.json();
+
                 if (res.ok) {
-                    // Show category
+                    categoryBadge.style.display = 'inline-block';
                     const categoryNames = {
                         'Code': '💻 Code Explanation',
-                        'Error': '🐛 Error Diagnosis',
+                        'Error': '🐛 Error Diagnosis', 
                         'Doc': '📚 Documentation Summary',
                         'Question': '💡 Productivity Tip'
                     };
                     categoryBadge.textContent = categoryNames[data.category] || 'Response';
-                    
-                    // Show response
-                    response.textContent = data.response;
+                    responseDiv.textContent = data.response;
                 } else {
-                    response.textContent = 'Error: ' + (data.error || 'Something went wrong');
+                    categoryBadge.style.display = 'inline-block';
+                    categoryBadge.textContent = '⚠️ Error';
+                    responseDiv.textContent = 'Error: ' + (data.error || data.message || 'Something went wrong');
                 }
             } catch (error) {
                 loading.style.display = 'none';
-                response.textContent = 'Network Error: ' + error.message + '\n\nMake sure your API URL is correct and CORS is enabled.';
-            } finally {
                 submitBtn.disabled = false;
+                submitBtn.textContent = 'Ask CodeTutor';
+                categoryBadge.style.display = 'inline-block';
+                categoryBadge.textContent = '❌ Network Error';
+                responseDiv.textContent = 'Failed to connect to CodeTutor AI.\n\nError: ' + error.message + '\n\nPlease check:\n1. Your API URL is correct\n2. CORS is enabled\n3. You have internet connection';
+                console.error('API Error:', error);
             }
         }
 
