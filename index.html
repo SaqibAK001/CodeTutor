@@ -5,191 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CodeTutor AI - Your Coding Mentor</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            color: white;
-            margin-bottom: 40px;
-        }
-
-        header h1 {
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        .feature-card h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .feature-card p {
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        .main-interface {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .input-section {
-            margin-bottom: 20px;
-        }
-
-        .input-section label {
-            display: block;
-            margin-bottom: 10px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 200px;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            resize: vertical;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            align-items: center;
-        }
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .toggle-container input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        button:hover {
-            background: #5568d3;
-        }
-
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-
-        .output-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .output-section.active {
-            display: block;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-bottom: 15px;
-        }
-
-        .response {
-            white-space: pre-wrap;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        .loading {
-            text-align: center;
-            color: #667eea;
-            font-size: 1.2em;
-        }
-
-        footer {
-            text-align: center;
-            color: white;
-            margin-top: 30px;
-            padding: 20px;
-        }
-
-        footer p {
-            opacity: 0.9;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; color: white; margin-bottom: 40px; }
+        header h1 { font-size: 3em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        header p { font-size: 1.2em; opacity: 0.9; }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .feature-card { background: white; padding: 30px; border-radius: 15px; text-align: center; cursor: pointer; transition: transform 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        .feature-card h3 { color: #667eea; margin-bottom: 10px; }
+        .feature-card p { color: #666; font-size: 0.9em; }
+        .main-interface { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .input-section { margin-bottom: 20px; }
+        .input-section label { display: block; margin-bottom: 10px; color: #333; font-weight: bold; }
+        textarea { width: 100%; min-height: 200px; padding: 15px; border: 2px solid #ddd; border-radius: 10px; font-family: 'Courier New', monospace; font-size: 14px; resize: vertical; }
+        textarea:focus { outline: none; border-color: #667eea; }
+        .controls { display: flex; gap: 15px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
+        .toggle-container { display: flex; align-items: center; gap: 10px; }
+        .toggle-container input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        button { background: #667eea; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        button:hover { background: #5568d3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .output-section { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-top: 20px; display: none; }
+        .output-section.active { display: block; }
+        .badge { display: inline-block; background: #667eea; color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.85em; margin-bottom: 15px; }
+        .response { white-space: pre-wrap; line-height: 1.6; color: #333; }
+        .loading { text-align: center; color: #667eea; font-size: 1.2em; }
+        footer { text-align: center; color: white; margin-top: 30px; padding: 20px; }
+        footer p { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -200,19 +44,19 @@
         </header>
 
         <div class="features">
-            <div class="feature-card" onclick="setMode('Explain This Code')">
+            <div class="feature-card" onclick="setMode('code')">
                 <h3>💻 Explain This Code</h3>
                 <p>Get line-by-line breakdown in simple English</p>
             </div>
-            <div class="feature-card" onclick="setMode('Fix My Error')">
+            <div class="feature-card" onclick="setMode('error')">
                 <h3>🐛 Fix My Error</h3>
                 <p>Instant root cause analysis + solution</p>
             </div>
-            <div class="feature-card" onclick="setMode('Summarize Docs')">
+            <div class="feature-card" onclick="setMode('docs')">
                 <h3>📚 Summarize Docs</h3>
                 <p>Technical docs → Concise TL;DR</p>
             </div>
-            <div class="feature-card" onclick="setMode('Get Productivity Tips')">
+            <div class="feature-card" onclick="setMode('tips')">
                 <h3>⚡ Get Productivity Tips</h3>
                 <p>Personalized workflow coaching</p>
             </div>
@@ -229,11 +73,11 @@
                     <input type="checkbox" id="beginnerMode" checked>
                     <label for="beginnerMode">🎓 Beginner Mode (Simplified explanations)</label>
                 </div>
-                <button onclick="askCodeTutor()" id="submitBtn">Ask CodeTutor</button>
+                <button id="submitBtn" onclick="askCodeTutor()">Ask CodeTutor</button>
             </div>
 
             <div class="output-section" id="outputSection">
-                <span class="badge" id="categoryBadge">Category</span>
+                <span class="badge" id="categoryBadge" style="display: none;">Category</span>
                 <div class="loading" id="loading" style="display: none;">🤔 CodeTutor is thinking...</div>
                 <div class="response" id="response"></div>
             </div>
@@ -251,138 +95,72 @@
         function setMode(mode) {
             const textarea = document.getElementById('userInput');
             const placeholders = {
-                'Explain This Code': 'Paste your code here...\nExample:\ndef hello():\n    print("Hello World")',
-                'Fix My Error': 'Paste your error message here...\nExample:\nNullPointerException: Cannot invoke method on null object',
-                'Summarize Docs': 'Paste documentation here...\nExample:\nThe fetch() method returns a Promise that resolves to a Response object...',
-                'Get Productivity Tips': 'Ask your question...\nExample: How do I improve my coding speed?'
+                'code': 'Paste your code here...\nExample:\ndef hello():\n    print("Hello World")',
+                'error': 'Paste your error message here...\nExample:\nNullPointerException: Cannot invoke method on null object',
+                'docs': 'Paste documentation here...\nExample:\nThe fetch() method returns a Promise that resolves to a Response object...',
+                'tips': 'Ask your question...\nExample: How do I improve my coding speed?'
             };
-            textarea.placeholder = placeholders[mode];
+            textarea.placeholder = placeholders[mode] || '';
             textarea.focus();
         }
 
-async function askCodeTutor() {
-    const input = document.getElementById('userInput').value;
-    const beginnerMode = document.getElementById('beginnerMode').checked;
-    const outputSection = document.getElementById('outputSection');
-    const loading = document.getElementById('loading');
-    const responseDiv = document.getElementById('response');
-    const categoryBadge = document.getElementById('categoryBadge');
-    const submitBtn = document.getElementById('submitBtn');
+        async function askCodeTutor() {
+            const input = document.getElementById('userInput').value;
+            const beginnerMode = document.getElementById('beginnerMode').checked;
+            const outputSection = document.getElementById('outputSection');
+            const loading = document.getElementById('loading');
+            const responseDiv = document.getElementById('response');
+            const categoryBadge = document.getElementById('categoryBadge');
+            const submitBtn = document.getElementById('submitBtn');
 
-    // Validate input
-    if (!input || input.trim() === '') {
-        alert('Please enter some code, error, or question first!');
-        return;
-    }
+            if (!input || input.trim() === '') {
+                alert('Please enter some code, error, or question first!');
+                return;
+            }
 
-    // Show loading state
-    outputSection.classList.add('active');
-    loading.style.display = 'block';
-    responseDiv.textContent = '';
-    categoryBadge.style.display = 'none';
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Thinking...';
-
-    try {
-        // ⚠️ MAKE SURE THIS URL IS CORRECT
-        const API_URL = 'https://c80uujw55j.execute-api.us-east-1.amazonaws.com/dev/analyze';
-
-        const res = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                input: input,
-                beginnerMode: beginnerMode
-            })
-        });
-
-        // Hide loading
-        loading.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Ask CodeTutor';
-
-        // Parse response
-        const data = await res.json();
-
-        if (res.ok) {
-            // Show category badge
-            categoryBadge.style.display = 'inline-block';
-            const categoryNames = {
-                'Code': '💻 Code Explanation',
-                'Error': '🐛 Error Diagnosis',
-                'Doc': '📚 Documentation Summary',
-                'Question': '💡 Productivity Tip'
-            };
-            categoryBadge.textContent = categoryNames[data.category] || 'Response';
-
-            // Show AI response
-            responseDiv.textContent = data.response;
-        } else {
-            // Show error from API
-            categoryBadge.style.display = 'inline-block';
-            categoryBadge.textContent = '⚠️ Error';
-            responseDiv.textContent = 'Error: ' + (data.error || data.message || 'Something went wrong');
-        }
-
-    } catch (error) {
-        // Hide loading
-        loading.style.display = 'none';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Ask CodeTutor';
-
-        // Show network error
-        categoryBadge.style.display = 'inline-block';
-        categoryBadge.textContent = '❌ Network Error';
-        responseDiv.textContent = 'Failed to connect to CodeTutor AI.\n\nError: ' + error.message + '\n\nPlease check:\n1. Your API URL is correct\n2. CORS is enabled\n3. You have internet connection';
-        console.error('API Error:', error);
-    }
-}
-
-            // Show loading
             outputSection.classList.add('active');
             loading.style.display = 'block';
-            response.textContent = '';
+            responseDiv.textContent = '';
+            categoryBadge.style.display = 'none';
             submitBtn.disabled = true;
+            submitBtn.textContent = 'Thinking...';
 
             try {
                 const res = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        input: input,
-                        beginnerMode: beginnerMode
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input: input, beginnerMode: beginnerMode })
                 });
 
-                const data = await res.json();
-                
-                // Hide loading
                 loading.style.display = 'none';
-                
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Ask CodeTutor';
+
+                const data = await res.json();
+
                 if (res.ok) {
-                    // Show category
+                    categoryBadge.style.display = 'inline-block';
                     const categoryNames = {
                         'Code': '💻 Code Explanation',
-                        'Error': '🐛 Error Diagnosis',
+                        'Error': '🐛 Error Diagnosis', 
                         'Doc': '📚 Documentation Summary',
                         'Question': '💡 Productivity Tip'
                     };
                     categoryBadge.textContent = categoryNames[data.category] || 'Response';
-                    
-                    // Show response
-                    response.textContent = data.response;
+                    responseDiv.textContent = data.response;
                 } else {
-                    response.textContent = 'Error: ' + (data.error || 'Something went wrong');
+                    categoryBadge.style.display = 'inline-block';
+                    categoryBadge.textContent = '⚠️ Error';
+                    responseDiv.textContent = 'Error: ' + (data.error || data.message || 'Something went wrong');
                 }
             } catch (error) {
                 loading.style.display = 'none';
-                response.textContent = 'Network Error: ' + error.message + '\n\nMake sure your API URL is correct and CORS is enabled.';
-            } finally {
                 submitBtn.disabled = false;
+                submitBtn.textContent = 'Ask CodeTutor';
+                categoryBadge.style.display = 'inline-block';
+                categoryBadge.textContent = '❌ Network Error';
+                responseDiv.textContent = 'Failed to connect to CodeTutor AI.\n\nError: ' + error.message + '\n\nPlease check:\n1. Your API URL is correct\n2. CORS is enabled\n3. You have internet connection';
+                console.error('API Error:', error);
             }
         }
 
