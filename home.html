@@ -246,94 +246,83 @@
         </footer>
     </div>
 
-    <script>
-        // ⚠️ YOUR API GATEWAY URL
-        const API_URL = 'https://c80uujw55j.execute-api.us-east-1.amazonaws.com/dev/analyze';
+<script>
+    // YOUR API GATEWAY URL
+    const API_URL = 'https://c80uujw55j.execute-api.us-east-1.amazonaws.com/dev/analyze';
 
-        function setMode(mode) {
-            const textarea = document.getElementById('userInput');
-            const placeholders = {
-                'code': 'Paste your code here...\nExample:\ndef hello():\n    print("Hello World")',
-                'error': 'Paste your error message here...\nExample:\nNullPointerException: Cannot invoke method on null object',
-                'docs': 'Paste documentation here...\nExample:\nThe fetch() method returns a Promise that resolves to a Response object...',
-                'tips': 'Ask your question...\nExample: How do I improve my coding speed?'
-            };
-            textarea.placeholder = placeholders[mode] || '';
-            textarea.focus();
+    function setMode(mode) {
+        const textarea = document.getElementById('userInput');
+        const placeholders = {
+            'code': 'Paste your code here...\nExample:\ndef hello():\n    print("Hello World")',
+            'error': 'Paste your error message here...\nExample:\nNullPointerException',
+            'docs': 'Paste documentation here...\nExample:\nThe fetch() method...',
+            'tips': 'Ask your question...\nExample: How do I improve?'
+        };
+        textarea.placeholder = placeholders[mode] || '';
+        textarea.focus();
+    }
+
+    async function askCodeTutor() {
+        const input = document.getElementById('userInput').value;
+        const beginnerMode = document.getElementById('beginnerMode').checked;
+        const outputSection = document.getElementById('outputSection');
+        const loading = document.getElementById('loading');
+        const responseDiv = document.getElementById('response');
+        const categoryBadge = document.getElementById('categoryBadge');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (!input || input.trim() === '') {
+            alert('Please enter some text first!');
+            return;
         }
 
-        async function askCodeTutor() {
-            const input = document.getElementById('userInput').value;
-            const beginnerMode = document.getElementById('beginnerMode').checked;
-            const outputSection = document.getElementById('outputSection');
-            const loading = document.getElementById('loading');
-            const responseDiv = document.getElementById('response');
-            const categoryBadge = document.getElementById('categoryBadge');
-            const submitBtn = document.getElementById('submitBtn');
+        outputSection.classList.add('active');
+        loading.style.display = 'block';
+        responseDiv.textContent = '';
+        categoryBadge.style.display = 'none';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Thinking...';
 
-            if (!input || input.trim() === '') {
-                alert('Please enter some code, error, or question first!');
-                return;
-            }
+        try {
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ input: input, beginnerMode: beginnerMode })
+            });
 
-            outputSection.classList.add('active');
-            loading.style.display = 'block';
-            responseDiv.textContent = '';
-            categoryBadge.style.display = 'none';
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Thinking...';
+            loading.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Ask CodeTutor';
 
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json' 
-                    },
-                    body: JSON.stringify({ 
-                        input: input, 
-                        beginnerMode: beginnerMode 
-                    })
-                });
+            const data = await res.json();
 
-                loading.style.display = 'none';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Ask CodeTutor';
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    categoryBadge.style.display = 'inline-block';
-                    const categoryNames = {
-                        'Code': '💻 Code Explanation',
-                        'Error': '🐛 Error Diagnosis', 
-                        'Doc': '📚 Documentation Summary',
-                        'Question': '💡 Productivity Tip'
-                    };
-                    categoryBadge.textContent = categoryNames[data.category] || 'Response';
-                    responseDiv.textContent = data.response;
-                } else {
-                    categoryBadge.style.display = 'inline-block';
-                    categoryBadge.textContent = '⚠️ Error';
-                    responseDiv.textContent = 'Error: ' + (data.error || data.message || 'Something went wrong');
-                }
-            } catch (error) {
-                loading.style.display = 'none';
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Ask CodeTutor';
+            if (res.ok) {
                 categoryBadge.style.display = 'inline-block';
-                categoryBadge.textContent = '❌ Network Error';
-                responseDiv.textContent = 'Failed to connect to CodeTutor AI.\n\nError: ' + error.message + '\n\nPlease check:\n1. Your API URL is correct\n2. CORS is enabled\n3. You have internet connection';
-                console.error('API Error:', error);
+                categoryBadge.textContent = 'Response';
+                responseDiv.textContent = data.response || JSON.stringify(data, null, 2);
+            } else {
+                categoryBadge.style.display = 'inline-block';
+                categoryBadge.textContent = 'Error';
+                responseDiv.textContent = 'Error: ' + (data.error || 'Something went wrong');
             }
+        } catch (error) {
+            loading.style.display = 'none';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Ask CodeTutor';
+            categoryBadge.style.display = 'inline-block';
+            categoryBadge.textContent = 'Network Error';
+            responseDiv.textContent = 'Failed to connect: ' + error.message;
+            console.error('API Error:', error);
         }
+    }
 
-        // Allow Enter key to submit (Shift+Enter for new line)
-        document.getElementById('userInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                askCodeTutor();
-            }
-        });
-    </script>
+    // Add Enter key support
+    document.getElementById('userInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            askCodeTutor();
+        }
+    });
+</script>
 </body>
 </html>
